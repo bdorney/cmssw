@@ -9,7 +9,7 @@ class isolationHistos:
         """
 
         prefix = "h_data"
-        if mcType not None:
+        if mcType is not None:
             prefix = "h_%s"%mcType
 
         return

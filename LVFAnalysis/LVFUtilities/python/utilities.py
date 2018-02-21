@@ -1,10 +1,10 @@
-selLevels = list(
+selLevels = (
         "all",
         "id",
         "idIso"
         )
 
-mcLevels = list(
+mcLevels = (
         "gen"
         "reco"
         )

@@ -1,7 +1,7 @@
 import ROOT as r
-from kinematicHistos import *
-from isolationHistos import *
-from utilities import selLevels
+from LVFAnalysis.LVFHistograms.kinematicHistos import *
+from LVFAnalysis.LVFHistograms.isolationHistos import *
+from LVFAnalysis.LVFUtilities.utilities import selLevels
 
 class PhysObjHistos:
     def __init__(self, pdgId, name=None, mcType=None):

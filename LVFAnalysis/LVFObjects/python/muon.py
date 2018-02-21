@@ -1,4 +1,4 @@
-from LVFAnalysis.python.utils.physicsObjects.physicsObject import *
+from LVFAnalysis.LVFObjects.physicsObject import *
 
 import ROOT as r
 

@@ -9,7 +9,7 @@ class kinematicHistos:
         """
         
         prefix = "h_data"
-        if mcType not None:
+        if mcType is not None:
             prefix = "h_%s"%mcType
 
         self.eta = r.TH1F("%s_%s_eta_%s"%(prefix,physObj,selLevel),"%s eta - %s"%(physObj, selLevel), 50,-2.45,2.45)

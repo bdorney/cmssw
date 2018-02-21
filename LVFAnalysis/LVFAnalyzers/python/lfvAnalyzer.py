@@ -1,16 +1,16 @@
 import os
 
-from LVFAnalysis.python.utils.elHistos import ElHistos
-from LVFAnalysis.python.utils.muonHistos import MuonHistos
-from LVFAnalysis.python.utils.PhysObjHistos import PhysObjHistos
-from LVFAnalysis.python.utils.tauHistos import TauHistos
-from LVFAnalysis.python.utils.utilities import selLevels, mcLevels
+from LVFAnalysis.LVFHistograms.ElHistos import ElHistos
+from LVFAnalysis.LVFHistograms.MuonHistos import MuonHistos
+from LVFAnalysis.LVFHistograms.PhysObjHistos import PhysObjHistos
+from LVFAnalysis.LVFHistograms.TauHistos import TauHistos
+from LVFAnalysis.LVFUtilities.utilities import selLevels, mcLevels
 
-from LVFAnalysis.python.utils.physicsObjects.physicsObject import *
+from LVFAnalysis.LVFObjects.physicsObject import *
 
 import ROOT as r
 
-class lvfAnalyzer:
+class lfvAnalyzer:
     def __init__(self, inputFileName, inputTreeName="IIHEAnalysis", isData=False):
         """
         inputFileName - physical filename of input TFile to perform analysis on
@@ -50,7 +50,7 @@ class lvfAnalyzer:
 
         return
 
-    def analyze(self, printLvl=1000):
+    def analyze(self, printLvl=1000, numEvts=-1):
         """
         Analyzes data stored in self.dataTree and prints the 
         number of processed events every printLvl number of events
@@ -61,15 +61,29 @@ class lvfAnalyzer:
         #Loop over input TTree
         analyzedEvts = 0
         for event in self.dataTree:
+            # Increment number of analyzed events
             analyzedEvts += 1
+
+            # Tell the user the number of analyzed events
             if analyzedEvts % printLvl:
                 print "Processed %i number of events"%analyzedEvts 
 
+            # Exit if we've analyzed the requested number of events
+            if numEvts > -1 and analyzedEvts > numEvts:
+                break
+
             # Loop over generated particles
+            list_genPart = ()
             if not isData:
                 for idx in range(0,event.mc_px.size()):
-                    
-
+                    genPart = PhysObj(
+                            event.mc_px.at(idx),
+                            event.mc_py.at(idx),
+                            event.mc_pz.at(idx),
+                            event.mc_energy.at(idx),
+                            event.mc_pdgId.at(idx),
+                            )
+                    print "%i\t%f\t%f\t%f\t%f"%(genPart.pdgId, genPart.Px(), genPart.Py(), genPart.Pz(), genPart.E())
             # Loop over muons
             # Loop over electrons
             # Loop over taus
