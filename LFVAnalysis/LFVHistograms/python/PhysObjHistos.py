@@ -1,7 +1,7 @@
 import ROOT as r
-from LVFAnalysis.LVFHistograms.kinematicHistos import *
-from LVFAnalysis.LVFHistograms.isolationHistos import *
-from LVFAnalysis.LVFUtilities.utilities import selLevels
+from LFVAnalysis.LFVHistograms.kinematicHistos import *
+from LFVAnalysis.LFVHistograms.isolationHistos import *
+from LFVAnalysis.LFVUtilities.utilities import selLevels
 
 class PhysObjHistos:
     def __init__(self, pdgId, name=None, mcType=None):
@@ -16,26 +16,21 @@ class PhysObjHistos:
             11:"el",
             13:"mu",
             15:"tau",
-            32:"Zprime"
+            32:"Zprime",
+            1000016:"rpv"
                 }
 
         self.physObjType = ""
         if name is not None:
-            self.physObjType = physObj
+            self.physObjType = name
         else:
             self.physObjType = dict_pdgId[pdgId]
         
         # Setup histograms
         self.dict_histosKin = {}
-        self.dict_histosIso = {}
-
-        #prefix = "h_data"
-        #if mcType not None:
-        #    prefix = "h_%s"%mcType
         
         for lvl in selLevels:
-            self.histosKin[lvl] = kinematicHistos(self.physObj, lvl, mcType)
-            self.histosIso[lvl] = isolationHistos(self.physObj, lvl, mcType)
+            self.dict_histosKin[lvl] = kinematicHistos(self.physObjType, lvl, mcType)
 
         return
 
@@ -46,15 +41,17 @@ class PhysObjHistos:
         """
         
         outFile = r.TFile(filename, option, "", 1)
-        outDirPhysObj = outFile.mkdir(self.physObjType)
-        
-        for lvl in selLevels:
-            dirSelLevel = outDirPhysObj.mkdir(lvl)
-            
-            dirKin = dirSelLevel.mkdir("Kinematics")
-            self.histosKin[lvl].write(dirKin)
+        outFile.mkdir(self.physObjType)
+        outDirPhysObj = outFile.GetDirectory(self.physObjType)
 
-            dirIso = dirSelLevel.mkdir("Isolation")
-            self.histosIso[lvl].write(dirIso)
+        for lvl in selLevels:
+            outDirPhysObj.mkdir(lvl)
+            dirSelLevel = outDirPhysObj.GetDirectory(lvl)
+            
+            dirSelLevel.mkdir("Kinematics")
+            dirKin = dirSelLevel.GetDirectory("Kinematics")
+            self.dict_histosKin[lvl].write(dirKin)
+
+        outFile.Close()
 
         return
